@@ -1,5 +1,5 @@
 [package]
-name = "money-manager-backend"
+name = "money_manager_backend"
 version = "0.1.0"
 authors = ["pontakornth <pontakorn61@gmail.com>"]
 edition = "2018"

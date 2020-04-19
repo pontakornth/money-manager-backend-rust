@@ -1,7 +1,9 @@
 use actix_web::{HttpServer,HttpResponse,App,web};
 use r2d2::Pool;
 mod database;
-
+mod controllers;
+mod models;
+use controllers::users;
 async fn hello() -> HttpResponse {
     HttpResponse::NotImplemented()
         .body("Not implemented yet")
@@ -15,7 +17,12 @@ async fn main() -> std::io::Result<()> {
     HttpServer::new(move || {
         App::new()
             .data(pool.clone())
-            .route("/api", web::get().to(hello))
+            .route("/hello", web::get().to(hello))
+            .service(web::scope("/api/users")
+                .route("/{id}", web::get().to(users::get_userdata))
+                .route("/change_password", web::post().to(users::change_password))
+                .route("/{id}",web::delete().to(users::delete_account))
+        )
     })
     .bind("127.0.0.1:7500")?
     .run()

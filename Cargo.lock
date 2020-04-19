@@ -984,7 +984,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "money-manager-backend"
+name = "money_manager_backend"
 version = "0.1.0"
 dependencies = [
  "actix-cors",
