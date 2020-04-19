@@ -9,6 +9,7 @@ async fn hello() -> HttpResponse {
 
 #[actix_rt::main]
 async fn main() -> std::io::Result<()> {
+    // Database.db is not commited in repo. You can create it yourself.
     let manager = database::connect("database.db");
     let pool = Pool::new(manager).unwrap();
     HttpServer::new(move || {
