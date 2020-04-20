@@ -3,6 +3,7 @@ use r2d2::Pool;
 mod database;
 mod controllers;
 mod models;
+use controllers::transactions;
 use controllers::users;
 async fn hello() -> HttpResponse {
     HttpResponse::NotImplemented()
@@ -22,7 +23,10 @@ async fn main() -> std::io::Result<()> {
                 .route("/{id}", web::get().to(users::get_userdata))
                 .route("/change_password", web::post().to(users::change_password))
                 .route("/{id}",web::delete().to(users::delete_account))
-        )
+            )
+            .service(web::scope("/api/transactions")
+                .route("", web::get().to(transactions::get_all_transaction))
+            )
     })
     .bind("127.0.0.1:7500")?
     .run()

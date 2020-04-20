@@ -1,14 +1,9 @@
 use serde::{Serialize,Deserialize};
 
-pub enum TransactionType = {
-    Income,
-    Expense,
-
-}
-
+#[derive(Serialize,Deserialize)]
 pub struct Transaction {
     pub title: String,
-    pub type: TransactionType,
+    pub transaction_type: String,
     pub category: String,
     pub amount: f64
 }
