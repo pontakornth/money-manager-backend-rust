@@ -15,7 +15,8 @@ pub enum UserError {
    UsernameAlreadyExist,
    WrongPassword,
    EmptyUsername,
-   UserDoesNotExist
+   UserDoesNotExist,
+   InternalError
 }
 
 fn generate_password(raw_password: &String) -> String {
@@ -26,15 +27,21 @@ fn verify_password(raw_password: &String,hash: &String) -> bool {
    verify(raw_password, &hash).unwrap()
 }
 
-fn register(user_data: &HashMap<String,String>) -> Result<(),UserError> {
-   let mock_username = vec![String::from("mmknightx"),String::from("kenzie")];
+fn register(user_data: &HashMap<String,String>,db: &PooledConnection<SqliteConnectionManager>) -> Result<(),UserError> {
    let username = &user_data.get("username").unwrap();
-   if mock_username.contains(username) {
-      Err(UserError::UsernameAlreadyExist)
-   } else if username.len() == 0 {
-      Err(UserError::EmptyUsername)
-   } else {
-      Ok(())
+   match get_user_by_username(&db, &username) {
+      Ok(_) => Err(UserError::UsernameAlreadyExist),
+      Err(Error::QueryReturnedNoRows) => {
+         // Register new user
+         let raw_password = &user_data.get("password").unwrap();
+         let display_name  = &user_data.get("display_name").unwrap();
+         let password_hash = generate_password(raw_password);
+         match db.execute("INSERT INTO users (username,display_name,password_hash) VALUES (?1,?2,?3)", &[&username,&display_name,&password_hash]) {
+            Ok(_) => Ok(()),
+            Err(_) => Err(UserError::InternalError)
+         }
+      },
+      Err(_) => Err(UserError::InternalError)
    }
 }
 
