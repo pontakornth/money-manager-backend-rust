@@ -11,12 +11,12 @@ CREATE TABLE transactions (
     category_id INTEGER,
     amount REAL
 );
-sqlite> CREATE TABLE categories (
+CREATE TABLE categories (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER,
     name TEXT
 );
-sqlite> CREATE TABLE budgets (
+CREATE TABLE budgets (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER,
     name TEXT,
